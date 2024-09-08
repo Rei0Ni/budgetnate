@@ -9,6 +9,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   var _key = GlobalKey();
+  var UsernameController = TextEditingController();
+  var PasswordController = TextEditingController();
 
   bool passwordVisible = false;
   @override
@@ -73,6 +75,7 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               TextFormField(
+                                controller: UsernameController,
                                 style: const TextStyle(fontSize: 14),
                                 decoration: InputDecoration(
                                     hintText: "Please Enter Your Username",
@@ -100,6 +103,7 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               TextFormField(
+                                controller: PasswordController,
                                 style: const TextStyle(fontSize: 14),
                                 obscureText: !passwordVisible,
                                 decoration: InputDecoration(
