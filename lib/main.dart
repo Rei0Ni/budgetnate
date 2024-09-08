@@ -1,3 +1,4 @@
+import 'package:budgetmate/Pages/Authentication/Login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         useMaterial3: true,
       ),
-      home: ,
+      home: const Login(),
     );
   }
 }
