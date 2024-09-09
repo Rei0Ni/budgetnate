@@ -1,7 +1,12 @@
 import 'package:budgetmate/Pages/Authentication/Login.dart';
+import 'package:budgetmate/Services/DioHelper.dart';
 import 'package:flutter/material.dart';
 
+DioHelper dioHelper = DioHelper();
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  dioHelper.init();
   runApp(const MyApp());
 }
 

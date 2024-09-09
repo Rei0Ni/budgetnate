@@ -1,3 +1,5 @@
+import 'package:budgetmate/Pages/Main/Home.dart';
+import 'package:budgetmate/main.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -8,11 +10,40 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  var _key = GlobalKey();
-  var UsernameController = TextEditingController();
-  var PasswordController = TextEditingController();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   bool passwordVisible = false;
+  String? usernameError;
+  String? passwordError;
+
+  validateUsername(String username) {
+    if (username.length < 1) {
+      setState(() {
+        usernameError = 'Can\'t be empty';
+      });
+    } else {
+      setState(() {
+        usernameError = null;
+      });
+    }
+    return usernameError;
+  }
+
+  validatePassword(String password) {
+    if (password.length < 1) {
+      setState(() {
+        passwordError = 'Can\'t be empty';
+      });
+    } else {
+      setState(() {
+        passwordError = null;
+      });
+    }
+    return passwordError;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,12 +106,14 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               TextFormField(
-                                controller: UsernameController,
+                                controller: usernameController,
+                                validator: (value) => validateUsername(value!),
                                 style: const TextStyle(fontSize: 14),
                                 decoration: InputDecoration(
                                     hintText: "Please Enter Your Username",
                                     hintStyle: const TextStyle(
                                         color: Color(0xFF1F1F1F)),
+                                    errorText: usernameError,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(12))),
@@ -103,13 +136,15 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               TextFormField(
-                                controller: PasswordController,
+                                controller: passwordController,
+                                validator: (value) => validatePassword(value!),
                                 style: const TextStyle(fontSize: 14),
                                 obscureText: !passwordVisible,
                                 decoration: InputDecoration(
                                     hintText: "Please Enter Your Password",
                                     hintStyle: const TextStyle(
                                         color: Color(0xFF1F1F1F)),
+                                    errorText: passwordError,
                                     suffixIcon: IconButton(
                                         onPressed: () {
                                           setState(() {
@@ -161,21 +196,35 @@ class _LoginState extends State<Login> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(50.0)),
                               ),
-                              child: Center(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // print("Button Pressed");
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    shadowColor: Colors.transparent,
-                                  ),
-                                  child: Ink(
-                                      child: const Text(
-                                    "Login",
-                                    style: TextStyle(color: Colors.white),
-                                  )),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  // print("Button Pressed");
+                                  if (_key.currentState!.validate()) {
+                                    var result = await dioHelper.login(
+                                        usernameController.text,
+                                        passwordController.text);
+                                    if (result!.statusCode == 200 &&
+                                        result.data["Result"] ==
+                                            "Login Successful") {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute<void>(
+                                          builder: (BuildContext context) =>
+                                              const Home(),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
                                 ),
+                                child: Ink(
+                                    child: const Text(
+                                  "Login",
+                                  style: TextStyle(color: Colors.white),
+                                )),
                               ),
                             ),
                           ),
