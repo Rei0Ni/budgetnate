@@ -1,5 +1,8 @@
+import 'package:budgetmate/Pages/Authentication/Register.dart';
+import 'package:budgetmate/Pages/Main/Dashboard.dart';
 import 'package:budgetmate/Pages/Main/Home.dart';
 import 'package:budgetmate/main.dart';
+import 'package:dio/src/response.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -19,7 +22,7 @@ class _LoginState extends State<Login> {
   String? passwordError;
 
   validateUsername(String username) {
-    if (username.length < 1) {
+    if (username.isEmpty) {
       setState(() {
         usernameError = 'Can\'t be empty';
       });
@@ -32,7 +35,7 @@ class _LoginState extends State<Login> {
   }
 
   validatePassword(String password) {
-    if (password.length < 1) {
+    if (password.isEmpty) {
       setState(() {
         passwordError = 'Can\'t be empty';
       });
@@ -42,6 +45,11 @@ class _LoginState extends State<Login> {
       });
     }
     return passwordError;
+  }
+
+  Future<Response?> getDashboardData() async {
+    var dashboardData = await dioHelper.getDashboardData();
+    return dashboardData;
   }
 
   @override
@@ -58,7 +66,7 @@ class _LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox.fromSize(
-                      size: Size(double.infinity, 105),
+                      size: const Size(double.infinity, 105),
                     ),
                     const Center(
                       child: Text(
@@ -97,7 +105,7 @@ class _LoginState extends State<Login> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Padding(
-                                padding: const EdgeInsets.only(bottom: 6),
+                                padding: EdgeInsets.only(bottom: 6),
                                 child: Text(
                                   "Username",
                                   style: TextStyle(
@@ -127,7 +135,7 @@ class _LoginState extends State<Login> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Padding(
-                                padding: const EdgeInsets.only(bottom: 6),
+                                padding: EdgeInsets.only(bottom: 6),
                                 child: Text(
                                   "Password",
                                   style: TextStyle(
@@ -182,7 +190,7 @@ class _LoginState extends State<Login> {
                                         0, 9), // changes position of shadow
                                   ),
                                 ],
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
@@ -193,8 +201,8 @@ class _LoginState extends State<Login> {
                                       Color(0xff428984),
                                       Color(0xff3f8782),
                                     ]),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50.0)),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(50.0)),
                               ),
                               child: ElevatedButton(
                                 onPressed: () async {
@@ -206,13 +214,21 @@ class _LoginState extends State<Login> {
                                     if (result!.statusCode == 200 &&
                                         result.data["Result"] ==
                                             "Login Successful") {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute<void>(
-                                          builder: (BuildContext context) =>
-                                              const Home(),
-                                        ),
-                                      );
+                                      prefs.setLoginCredentials(
+                                          usernameController.text,
+                                          passwordController.text);
+                                      prefs.setUserLoggedIn(true);
+
+                                      var dashboard = await getDashboardData();
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute<void>(
+                                            builder: (BuildContext context) =>
+                                                DashboardPage(
+                                                    prefs.getUsername(),
+                                                    dashboard!.data),
+                                          ),
+                                          ModalRoute.withName('/'));
                                     }
                                   }
                                 },
@@ -240,6 +256,13 @@ class _LoginState extends State<Login> {
                                 GestureDetector(
                                   onTap: () {
                                     // print("Sign Up Pressed!!!");
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            const Register(),
+                                      ),
+                                    );
                                   },
                                   child: const Text(
                                     "Sign Up",

@@ -1,12 +1,16 @@
-import 'package:budgetmate/Pages/Authentication/Login.dart';
+import 'package:budgetmate/Pages/SplashScreen.dart';
 import 'package:budgetmate/Services/DioHelper.dart';
+import 'package:budgetmate/Services/SharedPreferencesHelper.dart';
 import 'package:flutter/material.dart';
 
 DioHelper dioHelper = DioHelper();
+SharedPreferencesHelper prefs = SharedPreferencesHelper();
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  dioHelper.init();
+  await prefs.init();
+  await dioHelper.init();
+  
   runApp(const MyApp());
 }
 
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         useMaterial3: true,
       ),
-      home: const Login(),
+      home: const SplashScreenWithDelay(),
     );
   }
 }
