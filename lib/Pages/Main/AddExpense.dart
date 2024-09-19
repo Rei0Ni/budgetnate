@@ -204,8 +204,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                   ),
                                 ),
                                 Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 5, 0),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: Colors.grey,
@@ -213,21 +212,16 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                     ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: TextField(
-                                        controller: _descriptionController,
-                                        keyboardType: TextInputType.multiline,
-                                        maxLines: null,
-                                        decoration: const InputDecoration(
-                                          hintText:
-                                              "please enter a brief description",
-                                          hintStyle: TextStyle(
-                                              fontWeight: FontWeight.normal),
-                                          border: InputBorder.none,
-                                        ),
-                                      ),
+                                  child: TextField(
+                                    controller: _descriptionController,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    decoration: const InputDecoration(
+                                      hintText:
+                                          "please enter a brief description",
+                                      hintStyle: TextStyle(
+                                          fontWeight: FontWeight.normal),
+                                      border: InputBorder.none,
                                     ),
                                   ),
                                 ),
