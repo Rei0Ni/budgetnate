@@ -1,6 +1,7 @@
 import 'package:budgetmate/Pages/Main/AddExpense.dart';
 import 'package:budgetmate/Pages/Main/AddIncome.dart';
 import 'package:budgetmate/Shared/Enums.dart';
+import 'package:budgetmate/Shared/Extensions.dart';
 import 'package:budgetmate/Widgets/DashboardTransaction.dart';
 import 'package:budgetmate/main.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,14 @@ class _DashboardPageState extends State<DashboardPage> {
     latestTransactions = [];
     for (var transaction in widget.dashboard["LatestTransactions"]) {
       latestTransactions.add(DashboardTransaction(
+          transaction["Id"],
           TransactionType.values[transaction["Type"]],
-          TransactionCategory.values[transaction["Category"]],
+          TransactionType.values[transaction["Type"]] == TransactionType.income
+              ? TransactionIncomeCategory.values[transaction["Category"]].label!
+              : TransactionExpenseCategory.values
+                  .where((e) => transaction["Category"] == e.idx)
+                  .first
+                  .label!,
           transaction["Amount"],
           DateTime.parse(transaction["Date"])));
     }
@@ -385,14 +392,22 @@ class _DashboardPageState extends State<DashboardPage> {
               child: const Text('Income'),
               onPressed: () {
                 print("Income");
-                Navigator.of(context).pop();
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddIncomePage()),
+                );
               },
             ),
             TextButton(
               child: const Text('Expense'),
               onPressed: () {
                 print("Expense");
-                Navigator.of(context).pop();
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddExpensePage()),
+                );
               },
             ),
           ],

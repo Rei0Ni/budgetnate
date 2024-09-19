@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:budgetmate/Shared/Enums.dart';
 import 'package:budgetmate/main.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -25,6 +26,7 @@ class DioHelper {
     try {
       var result = await dio!.post("User/Login",
           data: {"Username": username, "Password": password});
+      print(result);
       return result;
     } catch (e) {
       print(e);
@@ -41,6 +43,7 @@ class DioHelper {
         "Password": password,
         "ConfirmPassword": password
       });
+      print(result);
       return result;
     } catch (e) {
       print(e);
@@ -51,10 +54,21 @@ class DioHelper {
   Future<Response?> getDashboardData() async {
     try {
       var result = await dio!.get("Dashboard");
+      print(result);
       return result;
     } catch (e) {
       print(e);
     }
     return null;
+  }
+
+  Future<Response?> AddTransaction(dynamic transaction) async {
+    try {
+      var result = await dio!.post("Transaction/Add", data: transaction);
+      print(result);
+      return result;
+    } catch (e) {
+      print(e);
+    }
   }
 }
