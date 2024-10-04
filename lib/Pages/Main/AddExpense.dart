@@ -1,6 +1,8 @@
+import 'package:budgetmate/Services/SinglePeriodEnforcer.dart';
 import 'package:budgetmate/Shared/Enums.dart';
 import 'package:budgetmate/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AddExpensePage extends StatefulWidget {
@@ -16,6 +18,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
   final TextEditingController _descriptionController = TextEditingController();
 
   final TextEditingController _dateController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
   DateTime? _selectedDate;
 
   @override
@@ -55,6 +59,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
                   child: Form(
+                    key: _formKey,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 80),
                       child: Container(
@@ -173,8 +178,9 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                           padding:
                                               const EdgeInsets.only(left: 8),
                                           child: TextFormField(
+                                            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d\.]')), SinglePeriodEnforcer()],
                                             controller: _amountController,
-                                            keyboardType: TextInputType.number,
+                                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                             decoration: const InputDecoration(
                                               hintText: "0.00",
                                               hintStyle: TextStyle(
@@ -182,6 +188,15 @@ class _AddExpensePageState extends State<AddExpensePage> {
                                                       FontWeight.normal),
                                               border: InputBorder.none,
                                             ),
+                                            validator: (value) 
+                                            {
+                                                if(value == null || value.isEmpty)
+                                                {
+                                                    return 'Field cannot be empty';
+                                                }
+                                                
+                                                return null;
+                                            },
                                           ),
                                         ),
                                       ),
@@ -413,27 +428,32 @@ class _AddExpensePageState extends State<AddExpensePage> {
     );
   }
 
+
   Future<void> _AddExpense() async {
-    print(TransactionExpenseCategory.values
-        .byName(widget.dropdownValue!.replaceAll(" ", "_"))
-        .idx);
-    var income = {
-      "Type": 1,
-      "Amount": num.parse(_amountController.text),
-      "Category": TransactionExpenseCategory.values
-          .byName(widget.dropdownValue!.replaceAll(" ", "_"))
-          .idx,
-      "Description": _descriptionController.text,
-      "Date": widget.dateTime != null
-          ? widget.dateTime!.toIso8601String()
-          : DateTime.now().toIso8601String()
-    };
-    var result = await dioHelper.AddTransaction(income);
-    if (result!.statusCode == 200) {
-      Navigator.pop(context);
+    if(_formKey.currentState!.validate())
+    {
+        print(TransactionExpenseCategory.values
+            .byName(widget.dropdownValue!.replaceAll(" ", "_"))
+            .idx);
+        var income = {
+        "Type": 1,
+        "Amount": num.parse(_amountController.text),
+        "Category": TransactionExpenseCategory.values
+            .byName(widget.dropdownValue!.replaceAll(" ", "_"))
+            .idx,
+        "Description": _descriptionController.text,
+        "Date": widget.dateTime != null
+            ? widget.dateTime!.toIso8601String()
+            : DateTime.now().toIso8601String()
+        };
+        var result = await dioHelper.AddTransaction(income);
+        if (result!.statusCode == 200) {
+        Navigator.pop(context);
+        }
     }
   }
 }
+
 
 // CurveClipper Class
 class CurveClipper extends CustomClipper<Path> {
