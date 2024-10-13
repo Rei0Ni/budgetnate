@@ -179,8 +179,8 @@ class TransactionDetailsExpansionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 25),
-      child: ExpansionTile(
-          title: const Text("Transaction Details"),
+      child: const ExpansionTile(
+          title: Text("Transaction Details"),
           initiallyExpanded: true,
           backgroundColor: Colors.white,
           collapsedBackgroundColor: Colors.white,
@@ -198,9 +198,9 @@ class TransactionDetailsExpansionTile extends StatelessWidget {
 }
 
 class TransactionDetailsEntry extends StatelessWidget {
-  late String sLeft;
-  late String sRight;
-  TransactionDetailsEntry(
+  final String sLeft;
+  final String sRight;
+  const TransactionDetailsEntry(
     this.sLeft,
     this.sRight, {
     super.key,
