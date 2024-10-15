@@ -122,7 +122,7 @@ class _WalletPageState extends State<WalletPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
-                            'Latest Transactions',
+                            'Today\'s Transactions',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
