@@ -168,6 +168,61 @@ class TransactionDetailsPage extends StatelessWidget {
                           const Padding(
                             padding: EdgeInsets.only(bottom: 6, left: 5),
                             child: Text(
+                              "Description",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 5),
+                              child: GetBuilder(
+                                init: controller,
+                                builder:
+                                    (TransactionDetailsController controller) {
+                                  return controller.transaction!.Description ==
+                                          null
+                                      ? const Padding(
+                                          padding: EdgeInsets.all(10.0),
+                                          child:
+                                              Text('No Description Available'),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: controller
+                                                  .transaction!.Description,
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 6, left: 5),
+                            child: Text(
                               "Invoice",
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500),

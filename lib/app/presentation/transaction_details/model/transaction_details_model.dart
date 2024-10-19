@@ -15,13 +15,13 @@ class TransactionDetailsModel {
   String? Description;
   String? Date;
   String? Invoice;
-  
-  TransactionDetailsModel.fromJson(Map<String, dynamic> json){
+
+  TransactionDetailsModel.fromJson(Map<String, dynamic> json) {
     Id = json['Id'];
     Type = json['Type'];
     Amount = json['Amount'];
     Category = json['Category'];
-    Description = null;
+    Description = json['Description'];
     Date = json['Date'];
     Invoice = json['Invoice'];
   }
